@@ -2,7 +2,7 @@
 
 namespace MtnlMum;
 
-class Client
+class MtnlMum
 {
     private $url; 
     private $merchant_id;
