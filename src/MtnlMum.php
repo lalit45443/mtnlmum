@@ -2,7 +2,7 @@
 
 namespace MtnlMum;
 
-class Client
+class MtnlMum
 {
     private $url;
     private $merchant_id;
@@ -21,7 +21,7 @@ class Client
 
     private function validate_checksum($data, $checksum){
         $gchecksum = hash_hmac('sha256',$data, $this->merchant_key, false);
-        if($gchecksum == $checksum){
+        if(strtoupper($gchecksum) == $checksum){
             return true; 
         }
         return false;
@@ -31,7 +31,7 @@ class Client
         $jdata = json_encode($data);
         $checksum = $this->generate_checksum($jdata);
 
-        $m = new stdClass();
+        $m = new \stdClass();
         $m->merchant_id = $this->merchant_id;
         $m->data = $jdata;
         $m->checksum = $checksum;
@@ -41,22 +41,22 @@ class Client
         return $msg;
     }
 
-    private function ebill($tel_no, $subs_no, $bill_no, $bill_date, $amount, $email){
+    public function ebill($tel_no, $subs_no, $bill_no, $bill_date, $amount, $email){
 
         if($this->url == ''){
-            throw new Exception("URL is not provided");
+            throw new \Exception("URL is not provided");
         }
 
         if($this->merchant_id == ''){
-            throw new Exception("Merchant id is not provided");
+            throw new \Exception("Merchant id is not provided");
         }
 
         if($this->merchant_key == ''){
-            throw new Exception("Merchant key is not provided");
+            throw new \Exception("Merchant key is not provided");
         }
 
         try{
-            $m = new stdClass();
+            $m = new \stdClass();
             $m->tel_no = $tel_no;
             $m->subs_no = $subs_no;
             $m->bill_no = $bill_no;
@@ -69,22 +69,22 @@ class Client
             return $this->call_api($url, $msg); 
         }
         catch(Exception $e){
-            throw new Exception($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 
-    private function van($data){
+    public function van($data){
 
         if($this->url == ''){
-            throw new Exception("URL is not provided");
+            throw new \Exception("URL is not provided");
         }
 
         if($this->merchant_id == ''){
-            throw new Exception("Merchant id is not provided");
+            throw new \Exception("Merchant id is not provided");
         }
 
         if($this->merchant_key == ''){
-            throw new Exception("Merchant key is not provided");
+            throw new \Exception("Merchant key is not provided");
         }
 
         try{
@@ -93,26 +93,26 @@ class Client
             return $this->call_api($url, $msg); 
         }
         catch(Exception $e){
-            throw new Exception($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 
-    private function fetch($tel_no, $subs_no, $count = 1, $transaction = 'Y'){
+    public function fetch($tel_no, $subs_no, $count = 1, $transaction = 'Y'){
 
         if($this->url == ''){
-            throw new Exception("URL is not provided");
+            throw new \Exception("URL is not provided");
         }
 
         if($this->merchant_id == ''){
-            throw new Exception("Merchant id is not provided");
+            throw new \Exception("Merchant id is not provided");
         }
 
         if($this->merchant_key == ''){
-            throw new Exception("Merchant key is not provided");
+            throw new \Exception("Merchant key is not provided");
         }
 
         try{
-            $m = new stdClass();
+            $m = new \stdClass;
             $m->tel_no = $tel_no;
             $m->subs_no = $subs_no;
             $m->count = $count;
@@ -123,22 +123,22 @@ class Client
             return $this->call_api($url, $msg); 
         }
         catch(Exception $e){
-            throw new Exception($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 
-    private function checkout($data){
+    public function checkout($data){
 
         if($this->url == ''){
-            throw new Exception("URL is not provided");
+            throw new \Exception("URL is not provided");
         }
 
         if($this->merchant_id == ''){
-            throw new Exception("Merchant id is not provided");
+            throw new \Exception("Merchant id is not provided");
         }
 
         if($this->merchant_key == ''){
-            throw new Exception("Merchant key is not provided");
+            throw new \Exception("Merchant key is not provided");
         }
 
         try{
@@ -147,26 +147,26 @@ class Client
             return $this->call_api($url, $msg); 
         }
         catch(Exception $e){
-            throw new Exception($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 
-    private function payment($payment_id, $txn_ref_no, $amount, $txn_date, $error_status, $error_description){
+    public function payment($payment_id, $txn_ref_no, $amount, $txn_date, $error_status, $error_description){
 
         if($this->url == ''){
-            throw new Exception("URL is not provided");
+            throw new \Exception("URL is not provided");
         }
 
         if($this->merchant_id == ''){
-            throw new Exception("Merchant id is not provided");
+            throw new \Exception("Merchant id is not provided");
         }
 
         if($this->merchant_key == ''){
-            throw new Exception("Merchant key is not provided");
+            throw new \Exception("Merchant key is not provided");
         }
 
         try{
-            $m = new stdClass();
+            $m = new \stdClass();
             $m->payment_id        = $payment_id;
             $m->txn_ref_no        = $txn_ref_no;
             $m->amount            = $amount;
@@ -179,7 +179,7 @@ class Client
             return $this->call_api($url, $msg); 
         }
         catch(Exception $e){
-            throw new Exception($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -214,23 +214,23 @@ class Client
             $result = json_decode($content);
             if(is_object($result)){
                 if($result->error_code == '000'){
-                    if( !$this->validate_checksum($result->data, $this->merchant_key ,$result->checksum) ){
-                        throw new Exception("Invalid response checksum");
+                    if( !$this->validate_checksum($result->data, $result->checksum) ){
+                        throw new \Exception("Invalid response checksum");
                     } else {
-                        $res = new stdClass();
+                        $res = new \stdClass();
                         $res->response = 'SUCCESS';
                         $res->data = $result->data;
                         $res->merchant_id = $result->merchant_id;
-                        return $result;
+                        return $res;
                     }
                 } else {
-                    $err = new stdClass();
+                    $err = new \stdClass();
                     $err->error_code = $result->error_code;
                     $err->error_message = $result->error_message;
                     return $err;
                 }
             } else {
-                throw new Exception($result);
+                throw new \Exception($result);
             }
         }  
     }
