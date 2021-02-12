@@ -11,7 +11,7 @@ class MtnlMum
     function __construct($url, $merchant_id, $merchant_key) {
         $this->url = $url;
         $this->merchant_id = $merchant_id;
-        $this->merchant_key = $merchant_key;
+        $this->merchant_key = $merchant_key; 
     }
 
     private function generate_checksum($data){
