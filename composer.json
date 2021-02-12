@@ -1,0 +1,16 @@
+{
+    "name": "mtnlmum/client",
+    "description": "This library allows you to access various merchant service provided by MTNL Mumbai.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [{
+        "name": "Lalit Kumar",
+        "email": "lalitkumarmbm01@gmail.com"
+    }],
+    "autoload": {
+        "psr-4": {
+            "MtnlMum\\": "src/"
+        }
+    },
+    "require": {}
+}
