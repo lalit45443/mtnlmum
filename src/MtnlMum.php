@@ -50,6 +50,18 @@ class MtnlMum
 
     public function run($api, $data){
 
+        if($this->url == ''){
+            throw new Exception("URL is not provided");
+        }
+
+        if($this->merchant_id == ''){
+            throw new Exception("Merchant id is not provided");
+        }
+
+        if($this->merchant_key == ''){
+            throw new Exception("Merchant key is not provided");
+        }
+
         $api = strtoupper($api);
 
         if (!in_array($api, $this->apis)){
