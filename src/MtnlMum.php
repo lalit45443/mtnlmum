@@ -122,6 +122,7 @@ class MtnlMum
                         return $res;
                     }
                 } else {
+                    $this->err->error_code = $result->error_code;
                     $this->err->error_message = $result->error_message;
                     return $this->err;
                 }
