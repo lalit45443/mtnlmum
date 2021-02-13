@@ -208,7 +208,11 @@ class MtnlMum
         $header = curl_getinfo( $ch );
         curl_close( $ch );
         if($err != 0){
-            return $errmsg;
+            $err = new \stdClass();
+            $res->response = 'ERROR';
+            $err->error_code = 501;
+            $err->error_message = $errmsg;
+            return $err;
         } else {
             $content = base64_decode($content);
             $result = json_decode($content);
@@ -225,12 +229,17 @@ class MtnlMum
                     }
                 } else {
                     $err = new \stdClass();
+                    $res->response = 'ERROR';
                     $err->error_code = $result->error_code;
                     $err->error_message = $result->error_message;
                     return $err;
                 }
             } else {
-                throw new \Exception($result);
+                $err = new \stdClass();
+                $res->response = 'ERROR';
+                $err->error_code = 501;
+                $err->error_message = $result;
+                return $err;
             }
         }  
     }
