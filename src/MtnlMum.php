@@ -7,7 +7,6 @@ class MtnlMum
     private $url; 
     private $merchant_id;
     private $merchant_key;
-    private $apis = ['EBILL','VAN','FETCH','CHECKOUT','PAYMENT'];
 
     private $err;
 
@@ -48,7 +47,7 @@ class MtnlMum
         return $msg;
     }
 
-    public function run($api, $data){
+    public function run($data){
 
         if($this->url == ''){
             throw new Exception("URL is not provided");
@@ -62,24 +61,22 @@ class MtnlMum
             throw new Exception("Merchant key is not provided");
         }
 
-        $api = strtoupper($api);
-
-        if (!in_array($api, $this->apis)){
-            throw new \Exception("Invalid api parameter");
-        }
+        $class = get_class($data);
 
         $url = $this->url;
 
-        if( $api === 'EBILL'){
+        if( $class === 'MtnlMum\EbillData'){
             $url = $url."/api/ebill/";
-        } elseif( $api === 'VAN'){
+        } elseif( $class === 'MtnlMum\VanData'){
             $url = $url."/api/van/";
-        } elseif( $api === 'FETCH'){
+        } elseif( $class === 'MtnlMum\BillFetchData'){
             $url = $url."/api/fetch/";
-        } elseif( $api === 'CHECKOUT'){
+        } elseif( $class === 'MtnlMum\BillCheckoutData' ){
             $url = $url."/api/checkout/";
-        } elseif( $api === 'PAYMENT'){
+        } elseif( $class === 'MtnlMum\BillPaymentData' ){
             $url = $url."/api/payment/";
+        } else {
+            throw new \Exception("Invalid input data");
         }
 
         try{
